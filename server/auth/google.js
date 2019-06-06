@@ -33,7 +33,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
       const googleId = profile.id
       const name = profile.displayName
       const email = profile.emails[0].value
-
+      //finds userid, if does not exist tne creates name and email for the user
       User.findOrCreate({
         where: {googleId},
         defaults: {name, email}
@@ -45,6 +45,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 
   passport.use(strategy)
 
+  //if someone clicks on auth/google passport will take over
   router.get('/', passport.authenticate('google', {scope: 'email'}))
 
   router.get(

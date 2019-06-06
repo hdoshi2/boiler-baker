@@ -29,8 +29,10 @@ if (process.env.NODE_ENV === 'test') {
 if (process.env.NODE_ENV !== 'production') require('../secrets')
 
 // passport registration
+// serialize creates an identifier for a cookie...how do you want to identify users..takes a dynamic structure and converit it to a string
 passport.serializeUser((user, done) => done(null, user.id))
 
+//takes a serial string and convert it back to a dynamic structure object
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await db.models.user.findByPk(id)
@@ -60,6 +62,9 @@ const createApp = () => {
       saveUninitialized: false
     })
   )
+
+  //connect passport to express so passport supports certain routes. passort reads in from session the
+  //information it needs to fetch user id and create req.user for us.
   app.use(passport.initialize())
   app.use(passport.session())
 
@@ -69,6 +74,11 @@ const createApp = () => {
 
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))
+
+  //test
+  app.get('/test', (req, res, next) => {
+    res.send(req.user)
+  })
 
   // any remaining requests with an extension (.js, .css, etc.) send 404
   app.use((req, res, next) => {

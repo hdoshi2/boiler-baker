@@ -38,6 +38,7 @@ router.post('/logout', (req, res) => {
   res.redirect('/')
 })
 
+// auth/me can be used to see the current user that is logged in
 router.get('/me', (req, res) => {
   res.json(req.user)
 })
